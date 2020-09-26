@@ -21,18 +21,18 @@ public class TweetAPIClientTest {
     @Test(enabled = true)
     public void testUserCanTweetSuccessfully(){
         // 1. user send a tweet
-        String tweet="We are learning RestAPI Automation"+ UUID.randomUUID().toString();
+        String tweet="Check user ID"+ UUID.randomUUID().toString();
         ValidatableResponse response= this.tweetAPIClient.createTweet(tweet);
         // 2. Verify that the tweet was successful
         response.statusCode(200);
+        System.out.println(response.extract().body().asString());
         String actualTweet= response.extract().body().path("text");
         Assert.assertEquals(tweet,actualTweet);
     }
-
-    @Test(enabled = false)
+    @Test(enabled = true)
     public void testUserCanNotTweetTheSameTweetTwiceInARow(){
         // 1. user send a tweet
-       // String tweet="We are learning RestAPI Automation and Tweet check"+ UUID.randomUUID().toString();
+        // String tweet="We are learning RestAPI Automation and Tweet check"+ UUID.randomUUID().toString();
         String tweet="We are learning RestAPI Automation and Tweet check";
         ValidatableResponse response= this.tweetAPIClient.createTweet(tweet);
         // 2. Verify that the tweet was successful
@@ -42,42 +42,162 @@ public class TweetAPIClientTest {
         String actualTweet= response.extract().body().path("text");
         Assert.assertEquals(tweet,actualTweet);
         // User send the same tweet again
-      response= this.tweetAPIClient.createTweet(tweet);
+        response= this.tweetAPIClient.createTweet(tweet);
         // Verify that the tweet was unsuccessful
-       response.statusCode(403);
+        response.statusCode(403);
         //System.out.println(response.extract().body().asString());
         String expectedMessage = "Status is a duplicate.";
         String actualMessage = response.extract().body().path("errors[0].message");
         Assert.assertEquals(actualMessage, expectedMessage);
         Assert.assertNotSame("200", 403);
     }
-
     @Test(enabled = true)
     public void testDelete(){
-        String tweet="We are learning RestAPI Automationbdcd853a-a1cc-497b-aa9a-610b1c8cb8f2";
-        ValidatableResponse response=this.tweetAPIClient.deleteTweet(1308645820959424512l);
+        String tweet="We are learning RestAPI Automation and Tweet check";
+        ValidatableResponse response=this.tweetAPIClient.deleteTweet(1309688462224887810l);
         // Verify that the tweet was successfully deleted
         response.statusCode(200);
         String actualTweet=response.extract().body().path("text");
         Assert.assertEquals(tweet,actualTweet);
     }
+    /**
+     *  Create reTweet with valid data
+     */
     @Test(enabled = true)
-    public void testRetweet(){
-        String retweet="Our GREAT RALLY tonight in Pennsylvania. Tremendous energy! #MAGA";
-        ValidatableResponse response=this.tweetAPIClient.createRetweet(1308594096005697541l);
-// Verify that the tweet was successfully retweeted
+    public void testCreateRetweet(){
+        String retweet="RT @cnnbrk: Nearly 130 people were arrested Wednesday in Louisville protests over the Breonna Taylor case, the city's interim police chief…";
+        ValidatableResponse response=this.tweetAPIClient.createReTweet(1309188858433724422l);
         response.statusCode(200);
         String actualTweet=response.extract().body().path("text");
         Assert.assertEquals(retweet,actualTweet);
     }
+    /**
+     *  Create reTweet with invalid data
+     */
+    public void testCreateRetweetWithInvalidData(){
+        ValidatableResponse response=this.tweetAPIClient.createReTweetWithInvalidData(1309188858433724422l);
+        int actualReTweet=response.extract().statusCode();
+        Assert.assertEquals(404,actualReTweet);
+    }
+    /**
+     * Un reTweet with valid data
+     */
     @Test(enabled = true)
-    public void testShowTweetID(){
-        String tweet="hello";
-        ValidatableResponse response=this.tweetAPIClient.showTweetID(13760868246l);
-// Verify that the tweet was successfully deleted
+    public void testUnReTweet(){
+        String tweet="Nearly 130 people were arrested Wednesday in Louisville protests over the Breonna Taylor case, the city's interim police chief says";
+        ValidatableResponse response=this.tweetAPIClient.unReTweet(1309188858433724422l);
         response.statusCode(200);
         String actualTweet=response.extract().body().path("text");
         Assert.assertEquals(tweet,actualTweet);
+    }
+    /**
+     * Un reTweet with invalid data
+     */
+    @Test(enabled = true)
+    public void testUnReTweetInvalidId(){
+        ValidatableResponse response=this.tweetAPIClient.unReTweetInvalidID(324236500424335363l);
+        int actualUnRetweet=response.extract().statusCode();
+        Assert.assertEquals(404,actualUnRetweet);
+    }
+    /**
+     * Favorites Tweet create (Like)
+     */
+    @Test(enabled = true)
+    public void FavoritesTweetID(){
+        String tweet="Hello";
+        ValidatableResponse response=this.tweetAPIClient.favoritesTweet(1309885193134669825l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(tweet,actualTweet);
+    }
+    /**
+     * Favorites Tweet destroy (unLike)
+     */
+    @Test(enabled = true)
+    public void unLikeFavoritesTweet(){
+        String tweet="Hello";
+        ValidatableResponse response=this.tweetAPIClient.unlikeFavoritesTweet(1309885193134669825l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(tweet,actualTweet);
+    }
+    /**
+     * Favorites with invalid data
+     */
+    @Test(enabled = true)
+    public void TestCreateTweetWithWrongFavoritesEndPoint(){
+        String tweet = "Check user ID042a5d91-b156-4b9d-9dfa-ca94b5638801";
+        ValidatableResponse response = tweetAPIClient.favoritesTweetWithWrongFavoritesEndPoint(1308874571995664386L);
+        int actualCode = response.extract().statusCode();
+        Assert.assertEquals(404, actualCode);
+    }
+    /**
+     * Show tweet id with valid data
+     */
+    @Test(enabled = true)
+    public void testShowTweetID(){
+        String tweet="Hello";
+        ValidatableResponse response=this.tweetAPIClient.showTweetID(1309885193134669825l);
+        response.statusCode(200);
+        System.out.println(response.extract().body().asString());
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(tweet,actualTweet);
+    }
+
+    /**
+     * create Status LookUp with valid data
+     */
+    @Test(enabled = true)
+    public void testGetStatusLookUp(){
+        ValidatableResponse response=this.tweetAPIClient.getStatusLookUp(20,"EhsanKabir15");
+        int actualResult=response.extract().statusCode();
+        System.out.println(actualResult);
+        System.out.println(response.extract().body().asString());
+        Assert.assertEquals(200,actualResult);
+    }
+    /**
+     * create Status LookUp with invalid data
+     */
+    @Test(enabled = true)
+    public void testGetStatusLookUpWithInvalidData(){
+        ValidatableResponse response=this.tweetAPIClient.getStatusLookUpWithInvalidData(20,"EhsanKabir15");
+        int actualResult=response.extract().statusCode();
+        Assert.assertEquals(404,actualResult);
+    }
+    /**
+     * Favorites list with valid data
+     */
+    @Test(enabled = true)
+    public void testFavoritesListTweet(){
+        ValidatableResponse response=this.tweetAPIClient.favoritesListTweet("EhsanKabir15");
+        int actualCode = response.extract().statusCode();
+        System.out.println(response.extract().body().asString());
+        Assert.assertEquals(200,actualCode);
+    }
+    /**
+     * Favorites list with invalid data
+     */
+    @Test(enabled = true)
+    public void testFavoritesListWithInvalidTweet(){
+        ValidatableResponse response=this.tweetAPIClient.favoritesListWithInvalidTweet("EhsanKabir15");
+        int actualCode = response.extract().statusCode();
+        System.out.println(response.extract().body().asString());
+        Assert.assertEquals(404,actualCode);
+    }
+    @Test(enabled = true)
+    public void testGetRetweets(){
+        String tweet="Nearly 130 people were arrested Wednesday in Louisville protests over the Breonna Taylor case, the city's interim police chief says";
+        ValidatableResponse response=this.tweetAPIClient.getRetweets(1309188858433724422l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(tweet,actualTweet);
+    }
+    @Test(enabled = true)
+    public void testGetHomeTimeLineTweets(){
+        ValidatableResponse response=this.tweetAPIClient.getHomeTimeLineTweet("EhsanKabir15");
+        int actualCode = response.extract().statusCode();
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(200,actualCode);
     }
 
 
