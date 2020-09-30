@@ -30,6 +30,7 @@ public class TweetAPIClient extends RestAPI {
     private final String FAVORITES_LIST_USER_ENDPOINT="/favorites/list.json";
     private final String GET_RETWEETS_USER_ENDPOINT = "/statuses/retweets.json";
     private final String GET_HOME_TIMELINE_USER_ENDPOINT="/statuses/home_timeline.json";
+    private final String GET_ENTRIES_USER_ENDPOINT="/collections/entries.json";
 
 
     // GET ALL Tweet Information
@@ -181,6 +182,36 @@ public class TweetAPIClient extends RestAPI {
         return given().auth().oauth(this.apiKey, this.apiSecretKey, this.accessToken, this.accessTokenSecret)
                 .param("count", userId)
                 .when().get(this.baseUrl + this.GET_HOME_TIMELINE_USER_ENDPOINT )
+                .then();
+    }
+
+//
+//
+    /**
+     * GET All Tweet Information with valid data
+     */
+    public ValidatableResponse getUserTimeTweetWithValidData(int count, String screenName) {
+        return given().auth().oauth(this.apiKey, this.apiSecretKey, this.accessToken, this.accessTokenSecret)
+                .param("screen_Name", count, screenName)
+                .when().get(this.baseUrl + this.GET_USER_TWEET_ENDPOINT)
+                .then();
+    }
+    /**
+     * GET All Tweet Information with invalid end point
+     */
+    public ValidatableResponse getUserTimeTweetWithInvalidPoint(int count, String screenName) {
+        return given().auth().oauth(this.apiKey, this.apiSecretKey, this.accessToken, this.accessTokenSecret)
+                .param("screen_Name", count, screenName)
+                .when().get(this.baseUrl + this.GET_USER_TWEET_ENDPOINT+"1234")
+                .then();
+    }
+    /**
+     * Get collections entries
+     */
+    public ValidatableResponse getEntriesCollectionsTweet(String id)  {
+        return given().auth().oauth(this.apiKey, this.apiSecretKey, this.accessToken, this.accessTokenSecret)
+                .param("id", id)
+                .when().get(this.baseUrl+this.GET_ENTRIES_USER_ENDPOINT)
                 .then();
     }
 

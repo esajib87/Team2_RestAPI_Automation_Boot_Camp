@@ -54,7 +54,7 @@ public class TweetAPIClientTest {
     @Test(enabled = true)
     public void testDelete(){
         String tweet="We are learning RestAPI Automation and Tweet check";
-        ValidatableResponse response=this.tweetAPIClient.deleteTweet(1309688462224887810l);
+        ValidatableResponse response=this.tweetAPIClient.deleteTweet(1311334646215593985l);
         // Verify that the tweet was successfully deleted
         response.statusCode(200);
         String actualTweet=response.extract().body().path("text");
@@ -72,10 +72,108 @@ public class TweetAPIClientTest {
         Assert.assertEquals(retweet,actualTweet);
     }
     /**
+     *  Create reTweet with valid data1
+     */
+    @Test(enabled = true)
+    public void testCreateRetweet1(){
+        String retweet="Asked by debate moderator Chris Wallace to condemn white supremacists and militia groups, Pres. Trump replies, \"Sure, I'm willing to do that.\"\n" +
+                "\"Then do it, sir,\" Wallace says. http://abcn.ws/debate #Debates2020";
+        ValidatableResponse response=this.tweetAPIClient.createReTweet(1311131883292459008l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(retweet,actualTweet);
+    }
+    /**
+     * Favorites Tweet create (Like)1
+     */
+    @Test(enabled = true)
+    public void FavoritesTweetID1(){
+        String tweet="Asked by debate moderator Chris Wallace to condemn white supremacists and militia groups, Pres. Trump replies, \\\"Sure, I'm willing to do that.\\\"\\n\" +\n" +
+                "                \"\\\"Then do it, sir,\\\" Wallace says. http://abcn.ws/debate #Debates2020";
+        ValidatableResponse response=this.tweetAPIClient.favoritesTweet(1311131883292459008l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(tweet,actualTweet);
+    }
+    /**
+     * Favorites Tweet destroy (unLike)1
+     */
+    @Test(enabled = true)
+    public void unLikeFavoritesTweet1(){
+        String tweet="Asked by debate moderator Chris Wallace to condemn white supremacists and militia groups, Pres. Trump replies, \"Sure, I'm willing to do that.\"\n" +
+                "\"Then do it, sir,\" Wallace says. http://abcn.ws/debate #Debates2020";
+        ValidatableResponse response=this.tweetAPIClient.unlikeFavoritesTweet(1311131883292459008l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(tweet,actualTweet);
+    }
+    /**
+     *  Create reTweet with valid data2
+     */
+    @Test(enabled = true)
+    public void testCreateRetweet2(){
+        String retweet="There are three ways to vote this year in NY:\n" +
+                "\n" +
+                "1️⃣ By Absentee Ballot (You can either mail your ballot or drop it at any Early Voting or Election Day poll site, or at your local BOE by 9pm on Nov 3.)\n" +
+                "\n" +
+                "2️⃣ By Voting Early (Oct 24-Nov 1)\n" +
+                "\n" +
+                "3️⃣ By Voting In-Person on Election Day, Nov 3";
+        ValidatableResponse response=this.tweetAPIClient.createReTweet(1303470769754734599l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(retweet,actualTweet);
+    }
+    /**
+     * Favorites Tweet create (Like)2
+     */
+    @Test(enabled = true)
+    public void FavoritesTweetID2(){
+        String tweet="There are three ways to vote this year in NY:\n" +
+                "\n" +
+                "1️⃣ By Absentee Ballot (You can either mail your ballot or drop it at any Early Voting or Election Day poll site, or at your local BOE by 9pm on Nov 3.)\n" +
+                "\n" +
+                "2️⃣ By Voting Early (Oct 24-Nov 1)\n" +
+                "\n" +
+                "3️⃣ By Voting In-Person on Election Day, Nov 3";
+        ValidatableResponse response=this.tweetAPIClient.favoritesTweet(1303470769754734599l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(tweet,actualTweet);
+    }
+    /**
+     * Favorites Tweet destroy (unLike)2
+     */
+    @Test(enabled = true)
+    public void unLikeFavoritesTweet2(){
+        String tweet="There are three ways to vote this year in NY:\n" +
+                "\n" +
+                "1️⃣ By Absentee Ballot (You can either mail your ballot or drop it at any Early Voting or Election Day poll site, or at your local BOE by 9pm on Nov 3.)\n" +
+                "\n" +
+                "2️⃣ By Voting Early (Oct 24-Nov 1)\n" +
+                "\n" +
+                "3️⃣ By Voting In-Person on Election Day, Nov 3";
+        ValidatableResponse response=this.tweetAPIClient.unlikeFavoritesTweet(1303470769754734599l);
+        response.statusCode(200);
+        String actualTweet=response.extract().body().path("text");
+        Assert.assertEquals(tweet,actualTweet);
+    }
+
+    /**
      *  Create reTweet with invalid data
      */
+    @Test
     public void testCreateRetweetWithInvalidData(){
         ValidatableResponse response=this.tweetAPIClient.createReTweetWithInvalidData(1309188858433724422l);
+        int actualReTweet=response.extract().statusCode();
+        Assert.assertEquals(404,actualReTweet);
+    }
+    /**
+     *  Create reTweet with invalid data1
+     */
+    @Test
+    public void testCreateRetweetWithInvalidData1(){
+        ValidatableResponse response=this.tweetAPIClient.createReTweetWithInvalidData(1309178858433724422l);
         int actualReTweet=response.extract().statusCode();
         Assert.assertEquals(404,actualReTweet);
     }
@@ -96,6 +194,33 @@ public class TweetAPIClientTest {
     @Test(enabled = true)
     public void testUnReTweetInvalidId(){
         ValidatableResponse response=this.tweetAPIClient.unReTweetInvalidID(324236500424335363l);
+        int actualUnRetweet=response.extract().statusCode();
+        Assert.assertEquals(404,actualUnRetweet);
+    }
+    /**
+     * Un reTweet with invalid data1
+     */
+    @Test(enabled = true)
+    public void testUnReTweetInvalidId1(){
+        ValidatableResponse response=this.tweetAPIClient.unReTweetInvalidID(324236500824335363l);
+        int actualUnRetweet=response.extract().statusCode();
+        Assert.assertEquals(404,actualUnRetweet);
+    }
+    /**
+     * Un reTweet with invalid data2
+     */
+    @Test(enabled = true)
+    public void testUnReTweetInvalidId2(){
+        ValidatableResponse response=this.tweetAPIClient.unReTweetInvalidID(324236900824335363l);
+        int actualUnRetweet=response.extract().statusCode();
+        Assert.assertEquals(404,actualUnRetweet);
+    }
+    /**
+     * Un reTweet with invalid data3
+     */
+    @Test(enabled = true)
+    public void testUnReTweetInvalidId3(){
+        ValidatableResponse response=this.tweetAPIClient.unReTweetInvalidID(324236900804335363l);
         int actualUnRetweet=response.extract().statusCode();
         Assert.assertEquals(404,actualUnRetweet);
     }
@@ -199,6 +324,39 @@ public class TweetAPIClientTest {
         String actualTweet=response.extract().body().path("text");
         Assert.assertEquals(200,actualCode);
     }
+//
+//
+    /**
+     * GET All Tweet Information with valid data
+     */
+    @Test
+    public void testGetUserTimeTweetWithValidData(){
+        ValidatableResponse response = this.tweetAPIClient.getUserTimeTweetWithValidData(10,"EhsanKabir15");
+        int actualCode = response.extract().statusCode();
+        System.out.println(actualCode);
+        Assert.assertEquals(200,actualCode);
+    }
+    /**
+     * GET All Tweet Information with invalid end point
+     */
+    @Test
+    public void testGetUserTimeTweetWithInValidData(){
+        ValidatableResponse response = this.tweetAPIClient.getUserTimeTweetWithInvalidPoint(0,"EhsanKabir15");
+        int actualCode = response.extract().statusCode();
+        System.out.println(actualCode);
+        Assert.assertEquals(404,actualCode);
+    }
+    /**
+     * Get collections entries
+     */
+    @Test(enabled = true)
+    public void testGetCollectionsEntriesTweets(){
+        ValidatableResponse response=this.tweetAPIClient.getEntriesCollectionsTweet("custom-1309755845689868288");
+        int actualCode=response.extract().statusCode();
+        System.out.println(actualCode);
+        Assert.assertEquals(200,actualCode);
+    }
+
 
 
 

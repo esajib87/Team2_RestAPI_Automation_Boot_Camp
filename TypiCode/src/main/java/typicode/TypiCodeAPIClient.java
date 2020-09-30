@@ -1,7 +1,6 @@
 package typicode;
 
 public class TypiCodeAPIClient {
-    
     protected String baseUrl;
 
     public TypiCodeAPIClient() {
